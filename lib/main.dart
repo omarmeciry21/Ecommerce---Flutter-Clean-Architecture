@@ -1,9 +1,11 @@
+import 'package:ecommerce/core/sqlite_helpers/favorite_products_sqlite_helper.dart';
 import 'package:ecommerce/features/onboarding/view/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ecommerce/features/login/view/manager/login_provider.dart';
 
 void main() {
+  FavoriteProductsSQLiteHelper.instance.open();
   runApp(const MyApp());
 }
 

@@ -29,6 +29,18 @@ class ProductModel {
     );
   }
 
+  factory ProductModel.fromSQLiteMap(Map<String, dynamic> json) {
+    return ProductModel(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      price: json['price'],
+      image: json['image'],
+      category: json['category'],
+      rating: Rating(rate: json['rating'], count: json['count']),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -38,6 +50,19 @@ class ProductModel {
       'image': image,
       'category': category,
       'rating': rating.toJson(),
+    };
+  }
+
+  Map<String, dynamic> toSQLiteMap() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'price': price,
+      'image': image,
+      'category': category,
+      'rating': rating.rate,
+      'count': rating.count,
     };
   }
 }

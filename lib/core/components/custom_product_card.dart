@@ -1,9 +1,15 @@
-import 'package:ecommerce/features/home/data/models/product_model.dart';
+import 'package:ecommerce/core/models/product_model.dart';
 import 'package:flutter/material.dart';
 
 class CustomProductCard extends StatelessWidget {
-  const CustomProductCard({super.key, required this.product});
+  const CustomProductCard(
+      {super.key,
+      required this.product,
+      this.isFavorite = false,
+      required this.onFavoriteButtonTapped});
   final ProductModel product;
+  final bool isFavorite;
+  final void Function()? onFavoriteButtonTapped;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -30,21 +36,26 @@ class CustomProductCard extends StatelessWidget {
               Positioned(
                 top: 12,
                 right: 12,
-                child: Container(
-                  height: 36,
-                  width: 36,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 4,
-                          offset: Offset(0, 2),
-                        )
-                      ]),
-                  padding: EdgeInsets.all(4),
-                  child: Icon(Icons.favorite_outline_rounded),
+                child: InkWell(
+                  onTap: onFavoriteButtonTapped,
+                  child: Container(
+                    height: 36,
+                    width: 36,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
+                          )
+                        ]),
+                    padding: EdgeInsets.all(4),
+                    child: Icon(isFavorite
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_outline_rounded),
+                  ),
                 ),
               ),
             ],

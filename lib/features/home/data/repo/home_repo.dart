@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:ecommerce/core/api_services.dart';
-import 'package:ecommerce/features/home/data/models/product_model.dart';
+import 'package:ecommerce/core/models/product_model.dart';
+import 'package:ecommerce/core/sqlite_helpers/favorite_products_sqlite_helper.dart';
 import 'package:http/http.dart' as http;
 
 class HomeRepo {

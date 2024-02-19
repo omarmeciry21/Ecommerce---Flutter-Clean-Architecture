@@ -1,6 +1,6 @@
-import 'package:ecommerce/features/home/data/models/product_model.dart';
+import 'package:ecommerce/core/models/product_model.dart';
 import 'package:ecommerce/features/home/data/repo/home_repo.dart';
-import 'package:ecommerce/features/home/presentation/widgets/custom_product_card.dart';
+import 'package:ecommerce/core/components/custom_product_card.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -82,7 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: snapshot.data?.length,
                             itemBuilder: (context, index) {
                               return CustomProductCard(
-                                  product: snapshot.data![index]);
+                                product: snapshot.data![index],
+                              );
                             },
                           ),
                         ),
