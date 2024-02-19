@@ -1,5 +1,7 @@
+import 'package:ecommerce/features/home/presentation/screens/home_screen.dart';
 import 'package:ecommerce/features/login/data/models/login_request_model.dart';
 import 'package:ecommerce/features/login/data/repo/login_repo.dart';
+import 'package:ecommerce/features/login/view/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginProvider extends ChangeNotifier {
@@ -19,11 +21,8 @@ class LoginProvider extends ChangeNotifier {
       final response = await LoginRepo.login(
           LoginRequestModel(username: username, password: password));
       isLoading = false;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Login Successfully!"),
-        ),
-      );
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
     } catch (e) {
       isLoading = false;
       ScaffoldMessenger.of(context).showSnackBar(

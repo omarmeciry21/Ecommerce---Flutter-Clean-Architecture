@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ecommerce/core/api_services.dart';
 import 'package:ecommerce/features/login/data/models/login_request_model.dart';
 import 'package:ecommerce/features/login/data/models/login_response_model.dart';
 import 'package:http/http.dart' as http;
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 class LoginRepo {
   static Future<LoginResponseModel> login(
       LoginRequestModel loginRequestModel) async {
-    const String endpoint = 'https://fakestoreapi.com/auth/login';
+    const String endpoint = '${APIServices.baseUrl}/auth/login';
     final Map<String, String> headers = <String, String>{
       'Content-Type': 'application/json',
       'Accept': '*/*'
