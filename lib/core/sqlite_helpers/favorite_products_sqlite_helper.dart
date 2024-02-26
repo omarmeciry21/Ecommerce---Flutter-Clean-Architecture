@@ -16,7 +16,7 @@ final String columnrating = 'rating';
 final String columncount = 'count';
 
 class FavoriteProductsSQLiteHelper {
-  late Database db;
+  Database? db;
   FavoriteProductsSQLiteHelper._();
   static final FavoriteProductsSQLiteHelper instance =
       FavoriteProductsSQLiteHelper._();
@@ -36,19 +36,19 @@ create table $tablefavoriteProduct (
   $columnimage text not null,
   $columncategory text not null,
   $columnrating real not null,
-  $columncount integer not null,
+  $columncount integer not null
   )
 ''');
     });
   }
 
   Future<ProductModel> insert(ProductModel favoriteProduct) async {
-    await db.insert(tablefavoriteProduct, favoriteProduct.toSQLiteMap());
+    await db!.insert(tablefavoriteProduct, favoriteProduct.toSQLiteMap());
     return favoriteProduct;
   }
 
-  Future<List<ProductModel>> getfavoriteProducts() async {
-    List<Map> maps = await db.query(
+  Future<List<ProductModel>> getFavoriteProducts() async {
+    List<Map> maps = await db!.query(
       tablefavoriteProduct,
     );
     if (maps.length > 0) {
@@ -60,7 +60,7 @@ create table $tablefavoriteProduct (
   }
 
   Future<ProductModel?> getfavoriteProduct(int productId) async {
-    List<Map> maps = await db.query(tablefavoriteProduct,
+    List<Map> maps = await db!.query(tablefavoriteProduct,
         columns: [
           columnid,
           columntitle,
@@ -80,14 +80,14 @@ create table $tablefavoriteProduct (
   }
 
   Future<int> delete(int productId) async {
-    return await db.delete(tablefavoriteProduct,
+    return await db!.delete(tablefavoriteProduct,
         where: '$columnid = ?', whereArgs: [productId]);
   }
 
   Future<int> update(ProductModel favoriteProduct) async {
-    return await db.update(tablefavoriteProduct, favoriteProduct.toJson(),
+    return await db!.update(tablefavoriteProduct, favoriteProduct.toJson(),
         where: '$columnid = ?', whereArgs: [favoriteProduct.id]);
   }
 
-  Future close() async => db.close();
+  Future close() async => db!.close();
 }

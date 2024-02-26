@@ -21,14 +21,25 @@ class CustomProductCard extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.4,
           child: Stack(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  color: Colors.grey[200],
+              Container(
+                height: 175,
+                width: MediaQuery.of(context).size.width * 0.4,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 8,
+                      offset: Offset(2, 2),
+                    )
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
                   child: Image.network(
                     product.image,
-                    height: 175,
-                    width: MediaQuery.of(context).size.width * 0.4,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -42,16 +53,17 @@ class CustomProductCard extends StatelessWidget {
                     height: 36,
                     width: 36,
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          )
-                        ]),
-                    padding: EdgeInsets.all(4),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        )
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(4),
                     child: Icon(isFavorite
                         ? Icons.favorite_rounded
                         : Icons.favorite_outline_rounded),
@@ -61,24 +73,24 @@ class CustomProductCard extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 8,
         ),
         Text(
           product.title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        SizedBox(
+        const SizedBox(
           height: 4,
         ),
         Text(
           product.price.toStringAsFixed(2) + 'EGP',
-          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
+          style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
         ),
       ],
     );

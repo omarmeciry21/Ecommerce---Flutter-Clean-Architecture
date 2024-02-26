@@ -1,40 +1,37 @@
 import 'package:ecommerce/core/models/product_model.dart';
+import 'package:ecommerce/features/favorite_products/presentation/screens/favorite_products_screen.dart';
 import 'package:ecommerce/features/home/data/repo/home_repo.dart';
 import 'package:ecommerce/core/components/custom_product_card.dart';
+import 'package:ecommerce/features/favorite_products/presentation/manager/favorite_products_provider.dart';
+import 'package:ecommerce/features/home/presentation/manager/products_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<ProductModel>> productListResponseFuture;
   @override
   void initState() {
     super.initState();
-    productListResponseFuture = HomeRepo.getProducts();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProductsProvider>(context, listen: false)
+          .fetchProducts(context);
+      Provider.of<FavoriteProductsProvider>(context, listen: false)
+          .fetchFavoriteProducts();
+    });
   }
-
-  List<ProductModel> products = List.generate(
-      10,
-      (index) => ProductModel.fromJson({
-            "id": 1,
-            "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-            "price": 109.95,
-            "description":
-                "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-            "category": "men's clothing",
-            "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-            "rating": {"rate": 3.9, "count": 120}
-          }));
 
   final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
+    final products = Provider.of<ProductsProvider>(context).products;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -44,53 +41,67 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Discover',
                     style: TextStyle(fontWeight: FontWeight.w900, fontSize: 32),
                   ),
                   IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.favorite_outline_rounded, size: 32),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const FavoriteProductsScreen();
+                      }));
+                    },
+                    icon: const Icon(Icons.favorite_outline_rounded, size: 32),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 24,
               ),
-              FutureBuilder<List<ProductModel>>(
-                  future: productListResponseFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    }
-                    if (snapshot.hasData) {
-                      return Expanded(
-                        child: SingleChildScrollView(
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                            controller: scrollController,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 16,
-                                    childAspectRatio:
-                                        (MediaQuery.of(context).size.width *
-                                                0.4) /
-                                            205),
-                            itemCount: snapshot.data?.length,
-                            itemBuilder: (context, index) {
-                              return CustomProductCard(
-                                product: snapshot.data![index],
-                              );
-                            },
-                          ),
+              products != null
+                  ? Expanded(
+                      child: SingleChildScrollView(
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          controller: scrollController,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 16,
+                                  childAspectRatio:
+                                      (MediaQuery.of(context).size.width *
+                                              0.4) /
+                                          205),
+                          itemCount: products!.length,
+                          itemBuilder: (context, index) {
+                            return CustomProductCard(
+                              product: products![index],
+                              isFavorite:
+                                  Provider.of<FavoriteProductsProvider>(context)
+                                      .isFavoriteProduct(products![index]),
+                              onFavoriteButtonTapped: () {
+                                if (Provider.of<FavoriteProductsProvider>(
+                                        context,
+                                        listen: false)
+                                    .isFavoriteProduct(products[index])) {
+                                  Provider.of<FavoriteProductsProvider>(context,
+                                          listen: false)
+                                      .removeFavoriteProduct(products[index]);
+                                } else {
+                                  Provider.of<FavoriteProductsProvider>(context,
+                                          listen: false)
+                                      .addFavoriteProduct(products[index]);
+                                }
+                              },
+                            );
+                          },
                         ),
-                      );
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  }),
+                      ),
+                    )
+                  : Provider.of<ProductsProvider>(context).isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : const Center(child: Text('No Products Found!')),
             ],
           ),
         ),

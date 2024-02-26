@@ -16,9 +16,9 @@ class HomeRepo {
 
       final tmpProductList = <ProductModel>[];
 
-      (decodedResponse as List).forEach((element) {
+      for (var element in (decodedResponse as List)) {
         tmpProductList.add(ProductModel.fromJson(element));
-      });
+      }
       return tmpProductList;
     } catch (e) {
       print('Get Products Exception ' + e.toString());
